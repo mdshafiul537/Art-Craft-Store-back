@@ -1,15 +1,92 @@
+import { dbActionQuery, dbConnectionClient } from "../db/connection.js";
+
 class UserServices {
-  getAll = async () => {};
+  runDB = async (actionQuery) => {
+    try {
+      //   await dbConnectionClient.connect();
+      const database = dbConnectionClient.db("art_craft");
+      const userCollections = database.collection("user");
+      actionQuery(userCollections);
+    } catch (error) {
+      console.log("User Db Action Failed ", error);
+    } finally {
+      await dbConnectionClient.close();
+    }
+  };
+  getAll = async () => {
+    let usersResp = [];
+    try {
+      const database = dbConnectionClient.db("art_craft");
+      const collection = database.collection("user");
+
+      // Execute query
+      const cursor = collection.find();
+      // Print a message if no documents were found
+      usersResp = await cursor.toArray();
+    } finally {
+      await dbConnectionClient.close();
+      return usersResp;
+    }
+  };
 
   getOne = async (id) => {
     console.log("User Finding using id ", id);
+    let respUser = null;
+    try {
+      // Get the database and collection on which to run the operation
+      const database = dbConnectionClient.db("art_craft");
+      const collection = database.collection("user");
 
-    return {};
+      const options = {
+        projection: { _id: id },
+      };
+
+      const respUser = await collection.findOne({}, options);
+    } catch (error) {
+      console.log("User By ID Error, ", error);
+    } finally {
+      return respUser;
+      await client.close();
+    }
   };
 
-  addOne = async () => {};
+  addOne = async (user) => {
+    let userResult = null;
+    console.log("User Service Add Action ...");
 
-  userUpdate = async () => {};
+    try {
+      dbActionQuery((db) => {
+        const collection = db.collection("user");
+        user.create = new Date();
+        userResult = collection.insertOne(user);
+      });
+    } catch (error) {
+      console.log("addOne Error, ", error);
+    } finally {
+      return userResult;
+    }
+  };
+
+  userUpdate = async (uUser) => {
+    try {
+      const database = dbConnectionClient.db("art_craft");
+      const collection = database.collection("user");
+
+      const filter = { _id: uUser.id };
+
+      const options = { upsert: true };
+
+      const { name, email, profileURL } = uUser;
+      const updateDoc = {
+        $set: { name, email, profileURL, create },
+      };
+      // Update the first document that matches the filter
+      const result = await movies.updateOne(filter, updateDoc, options);
+    } finally {
+      // Close the connection after the operation completes
+      await dbConnectionClient.close();
+    }
+  };
 
   deleteOne = async () => {};
 }

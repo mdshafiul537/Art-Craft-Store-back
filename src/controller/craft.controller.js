@@ -1,10 +1,10 @@
-import { userServices } from "../services/user.services.js";
+import { craftServices } from "../services/user.services.js";
 import respFormat from "../utils/respFormat.js";
 
-class UserController {
+class CraftController {
   getAll = async (req, resp) => {
     try {
-      const users = await userServices.getAll();
+      const users = await craftServices.getAll();
       if (users) {
         resp.status(200);
         resp.send(respFormat(users, "users found", true));
@@ -23,7 +23,7 @@ class UserController {
       // console.log("User Request ", req);
 
       const { id } = req.params;
-      const user = await userServices.getOne(id);
+      const user = await craftServices.getOne(id);
       if (user) {
         resp.status(200);
         resp.send(respFormat(user, "user found", true));
@@ -41,7 +41,7 @@ class UserController {
   addUser = async (req, resp) => {
     try {
       console.log("User Body ", req.body);
-      const user = await userServices.addOne(req.body);
+      const user = await craftServices.addOne(req.body);
       if (user) {
         resp.status(200);
         resp.send(respFormat(user, "user added successfully", true));
@@ -56,7 +56,7 @@ class UserController {
   };
   updateUser = async (req, resp) => {
     try {
-      const users = await userServices.userUpdate(req.body);
+      const users = await craftServices.userUpdate(req.body);
       if (users) {
         resp.status(200);
         resp.send(respFormat(users, "user updated :)", true));
@@ -72,7 +72,7 @@ class UserController {
 
   removeUser = async (req, resp) => {
     try {
-      const users = await userServices.deleteOne(req.body);
+      const users = await craftServices.deleteOne(req.body);
       if (users) {
         resp.status(200);
         resp.send(respFormat(users, "user Deleted", true));
@@ -87,4 +87,4 @@ class UserController {
   };
 }
 
-export const userController = new UserController();
+export const craftController = new CraftController();
