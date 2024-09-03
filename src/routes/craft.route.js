@@ -5,8 +5,8 @@ const craftRoute = express.Router();
 
 craftRoute.get("/", craftController.getAll);
 craftRoute.get("/:id", craftController.getOne);
-craftRoute.post("/", craftController.addUser);
-craftRoute.put("/", craftController.updateUser);
-craftRoute.delete("/", craftController.removeUser);
+craftRoute.post("/", craftController.add);
+craftRoute.put("/", craftController.update);
+craftRoute.delete("/", craftController.remove);
 
 export { craftRoute };
