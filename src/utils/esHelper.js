@@ -1,4 +1,4 @@
-const isNumber = require("is-number");
+import isNumber from "is-number";
 
 /**
  * @method isEmpty

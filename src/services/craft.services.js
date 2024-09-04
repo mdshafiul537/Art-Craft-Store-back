@@ -1,6 +1,52 @@
+import { ObjectId } from "mongodb";
 import dbConnectionClient, { dbActionQuery } from "../db/connection.js";
+import { esIsEmpty } from "../utils/esHelper.js";
 
 class CraftServices {
+  getByQuery = async (query) => {
+    let respData = [];
+    try {
+      let filter = {};
+
+      if (query.stock && query.customizable) {
+        filter = { $and: [{ stockStatus: true }, { customization: true }] };
+      } else if (query.stock) {
+        filter = { stockStatus: true };
+      } else if (query.customizable) {
+        filter = { customization: true };
+      } else if (!esIsEmpty(query.rating)) {
+        filter = { rating: { $gte: query.rating } };
+      }
+
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
+
+      const cursor = collection.find(filter).limit(12);
+
+      respData = await cursor.toArray();
+    } catch (error) {
+      console.log("Get Query All Product ", error);
+    } finally {
+      return respData;
+    }
+  };
+
+  getByCat = async (category) => {
+    let respData = [];
+    try {
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
+      const cursor = collection.find({ category }).limit(6);
+
+      respData = await cursor.toArray();
+    } catch (error) {
+      console.log("Get All Product ", error);
+    } finally {
+      return respData;
+    }
+  };
   getAll = async () => {
     let respData = [];
     try {
@@ -13,7 +59,6 @@ class CraftServices {
     } catch (error) {
       console.log("Get All Product ", error);
     } finally {
-      await dbConnectionClient.close();
       return respData;
     }
   };
@@ -25,16 +70,15 @@ class CraftServices {
         .db("art_craft")
         .collection("product");
 
-      const options = {
-        projection: { _id: id },
-      };
+      const filter = { _id: new ObjectId(id) };
 
-      const resData = await collection.findOne({}, options);
+      const options = { upsert: true };
+
+      resData = await collection.findOne(filter);
     } catch (error) {
-      console.log("Get Product ", error);
+      console.log("Get One Product Error, ", error);
     } finally {
       return resData;
-      await dbConnectionClient.close();
     }
   };
 
@@ -62,24 +106,24 @@ class CraftServices {
 
   update = async (item) => {
     let result = null;
+    console.log("Item Update ", item);
     try {
       const collection = dbConnectionClient
         .db("art_craft")
         .collection("product");
 
-      const filter = { _id: item.id };
+      const filter = { _id: new ObjectId(item.id) };
 
       const options = { upsert: true };
 
-      const { name, email, profileURL } = uUser;
       const updateDoc = {
-        $set: { name, email, profileURL, create },
+        $set: { image: item.image },
       };
+
       // Update the first document that matches the filter
       result = await collection.updateOne(filter, updateDoc, options);
     } finally {
       // Close the connection after the operation completes
-      await dbConnectionClient.close();
       return result;
     }
   };
@@ -91,18 +135,16 @@ class CraftServices {
         .db("art_craft")
         .collection("product");
 
-      result = await collection.updateMany({}, [
+      result = await collection.updateMany({ category: "macrame" }, [
         {
           $set: {
-            stockStatus: { $toBool: "$stockStatus" },
-            customization: { $toBool: "$customization" },
+            category: "Macrame",
           },
         },
       ]);
     } catch (error) {
       console.log("Update Error, ", error);
     } finally {
-      await dbConnectionClient.close();
       return result;
     }
   };

@@ -12,7 +12,6 @@ class UserServices {
       // Print a message if no documents were found
       usersResp = await cursor.toArray();
     } finally {
-      await dbConnectionClient.close();
       return usersResp;
     }
   };
@@ -34,7 +33,6 @@ class UserServices {
       console.log("User By ID Error, ", error);
     } finally {
       return respUser;
-      await client.close();
     }
   };
 
@@ -69,10 +67,9 @@ class UserServices {
         $set: { name, email, profileURL, create },
       };
       // Update the first document that matches the filter
-      const result = await movies.updateOne(filter, updateDoc, options);
+      const result = await collection.updateOne(filter, updateDoc, options);
     } finally {
       // Close the connection after the operation completes
-      await dbConnectionClient.close();
     }
   };
 

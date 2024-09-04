@@ -2,12 +2,56 @@ import { craftServices } from "../services/craft.services.js";
 import respFormat from "../utils/respFormat.js";
 
 class CraftController {
+  getAllByCategory = async (req, resp) => {
+    try {
+      const { category } = req.params;
+      const products = await craftServices.getByCat(category);
+      if (products) {
+        resp.status(200);
+        resp.send(
+          respFormat(
+            products,
+            `${products.length} Products found By '${category}'`,
+            true
+          )
+        );
+      } else {
+        resp.status(202);
+        resp.send(respFormat(products, "Products not found By '${category}'"));
+      }
+    } catch (error) {
+      resp.status(202);
+      resp.send(respFormat(null, "Products not found By '${category}'"));
+    }
+  };
+
+  getAllByQuery = async (req, resp) => {
+    try {
+      console.log("Request Query ", req.query);
+
+      const products = await craftServices.getByQuery(req.query);
+      if (products) {
+        resp.status(200);
+        resp.send(
+          respFormat(products, `${products.length} Products found`, true)
+        );
+      } else {
+        resp.status(202);
+        resp.send(respFormat(products, "Products not found"));
+      }
+    } catch (error) {
+      resp.status(202);
+      resp.send(respFormat(null, "Products not found"));
+    }
+  };
   getAll = async (req, resp) => {
     try {
       const products = await craftServices.getAll();
       if (products) {
         resp.status(200);
-        resp.send(respFormat(products, "products found", true));
+        resp.send(
+          respFormat(products, `${products.length} Products found`, true)
+        );
       } else {
         resp.status(202);
         resp.send(respFormat(products, "products not found"));
@@ -20,21 +64,27 @@ class CraftController {
 
   getOne = async (req, resp) => {
     try {
-      // console.log("User Request ", req);
-
       const { id } = req.params;
       const product = await craftServices.getOne(id);
       if (product) {
+        const catProducts = await craftServices.getByCat(product.category);
+        console.log("Related Cat Items ", catProducts);
         resp.status(200);
-        resp.send(respFormat(product, "product found", true));
+        resp.send(
+          respFormat(
+            { product, cat: catProducts },
+            "Art & Craft found by ID",
+            true
+          )
+        );
       } else {
         resp.status(202);
-        resp.send(respFormat(product, "product not found by id"));
+        resp.send(respFormat(product, "Art & Craft not found by id"));
       }
     } catch (error) {
-      console.log("product find by id Error ", error);
+      console.log("Art & Craft find by id Error ", error);
       resp.status(202);
-      resp.send(respFormat(null, "product not found  by id"));
+      resp.send(respFormat(null, "Art & Craft not found  by id"));
     }
   };
 
@@ -56,7 +106,7 @@ class CraftController {
   };
   update = async (req, resp) => {
     try {
-      const product = await craftServices.userUpdate(req.body);
+      const product = await craftServices.update(req.body);
       if (product) {
         resp.status(200);
         resp.send(respFormat(product, "user updated :)", true));
