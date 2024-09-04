@@ -1,18 +1,6 @@
-import { dbActionQuery, dbConnectionClient } from "../db/connection.js";
+import dbConnectionClient, { dbActionQuery } from "../db/connection.js";
 
 class UserServices {
-  runDB = async (actionQuery) => {
-    try {
-      //   await dbConnectionClient.connect();
-      const database = dbConnectionClient.db("art_craft");
-      const userCollections = database.collection("user");
-      actionQuery(userCollections);
-    } catch (error) {
-      console.log("User Db Action Failed ", error);
-    } finally {
-      await dbConnectionClient.close();
-    }
-  };
   getAll = async () => {
     let usersResp = [];
     try {

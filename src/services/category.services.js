@@ -1,76 +1,67 @@
-import { dbActionQuery, dbConnectionClient } from "../db/connection.js";
+import dbConnectionClient, { dbActionQuery } from "../db/connection.js";
 
-class CraftServices {
-  collection = null;
-  isInitialize = false;
-
-  initCategoryCollection = () => {
-    const database = dbConnectionClient.db("art_craft");
-
-    this.collection = database.collection("category");
-    this.isInitialize = true;
-  };
+class CategoryServices {
   getAll = async () => {
     let respData = [];
     try {
-      if (!this.isInitialize) {
-        this.initCategoryCollection();
-      }
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("category");
 
-      const cursor = this.collection.find();
-      // Print a message if no documents were found
+      const cursor = collection.find();
+
       respData = await cursor.toArray();
     } catch (error) {
       console.log("Get All Category ", error);
     } finally {
-      await dbConnectionClient.close();
+      // await dbConnectionClient.close();
       return respData;
     }
   };
 
   getOne = async (id) => {
     let resData = null;
+    console.log("Category ID ", id);
     try {
-      // Get the database and collection on which to run the operation
-      if (!this.isInitialize) {
-        this.initCategoryCollection();
-      }
-
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("category");
       const options = {
         projection: { _id: id },
       };
 
-      const resData = await this.collection.findOne({}, options);
+      const resData = await collection.findOne({}, options);
     } catch (error) {
       console.log("Get Product ", error);
     } finally {
       return resData;
-      await dbConnectionClient.close();
+      // await dbConnectionClient.close();
     }
   };
 
   addOne = async (item) => {
     let addResult = null;
-    console.log("Product Service Add Action ...");
+    console.log("Category Service Add Action ...");
 
     try {
-      if (!this.isInitialize) {
-        this.initCategoryCollection();
-      }
-      addResult = await this.collection.insertOne(item);
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("category");
+
+      addResult = await collection.insertOne(item);
     } catch (error) {
-      console.log("Add Product ", error);
+      console.log("Add Category ", error);
     } finally {
       return addResult;
     }
   };
 
-  userUpdate = async (item) => {
+  update = async (item) => {
     let result = null;
     try {
-      if (!this.isInitialize) {
-        this.initCategoryCollection();
-      }
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("category");
 
       const filter = { _id: item.id };
 
@@ -81,10 +72,10 @@ class CraftServices {
         $set: { name, email, profileURL, create },
       };
       // Update the first document that matches the filter
-      result = await this.collection.updateOne(filter, updateDoc, options);
+      result = await collection.updateOne(filter, updateDoc, options);
     } finally {
       // Close the connection after the operation completes
-      await dbConnectionClient.close();
+      // await dbConnectionClient.close();
       return result;
     }
   };
@@ -92,6 +83,6 @@ class CraftServices {
   deleteOne = async () => {};
 }
 
-const craftServices = new CraftServices();
+const categoryServices = new CategoryServices();
 
-export { craftServices };
+export { categoryServices };

@@ -18,4 +18,6 @@ const dbActionQuery = async (actionQuery) => {
   }
 };
 
-export { dbConnectionClient, dbActionQuery };
+export default dbConnectionClient;
+
+export { dbActionQuery };

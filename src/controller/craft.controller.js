@@ -1,20 +1,20 @@
-import { craftServices } from "../services/user.services.js";
+import { craftServices } from "../services/craft.services.js";
 import respFormat from "../utils/respFormat.js";
 
 class CraftController {
   getAll = async (req, resp) => {
     try {
-      const users = await craftServices.getAll();
-      if (users) {
+      const products = await craftServices.getAll();
+      if (products) {
         resp.status(200);
-        resp.send(respFormat(users, "users found", true));
+        resp.send(respFormat(products, "products found", true));
       } else {
         resp.status(202);
-        resp.send(respFormat(users, "user not found"));
+        resp.send(respFormat(products, "products not found"));
       }
     } catch (error) {
       resp.status(202);
-      resp.send(respFormat(null, "user not found"));
+      resp.send(respFormat(null, "products not found"));
     }
   };
 
@@ -23,46 +23,46 @@ class CraftController {
       // console.log("User Request ", req);
 
       const { id } = req.params;
-      const user = await craftServices.getOne(id);
-      if (user) {
+      const product = await craftServices.getOne(id);
+      if (product) {
         resp.status(200);
-        resp.send(respFormat(user, "user found", true));
+        resp.send(respFormat(product, "product found", true));
       } else {
         resp.status(202);
-        resp.send(respFormat(user, "user not found by id"));
+        resp.send(respFormat(product, "product not found by id"));
       }
     } catch (error) {
-      console.log("user find by id Error ", error);
+      console.log("product find by id Error ", error);
       resp.status(202);
-      resp.send(respFormat(null, "user not found  by id"));
+      resp.send(respFormat(null, "product not found  by id"));
     }
   };
 
-  addUser = async (req, resp) => {
+  add = async (req, resp) => {
     try {
-      console.log("User Body ", req.body);
-      const user = await craftServices.addOne(req.body);
-      if (user) {
+      console.log("Item Body ", req.body);
+      const product = await craftServices.addOne(req.body);
+      if (product) {
         resp.status(200);
-        resp.send(respFormat(user, "user added successfully", true));
+        resp.send(respFormat(product, "Item added successfully", true));
       } else {
         resp.status(202);
-        resp.send(respFormat(user, "user add failed"));
+        resp.send(respFormat(product, "Item add failed"));
       }
     } catch (error) {
       resp.status(202);
-      resp.send(respFormat(null, "user add failed"));
+      resp.send(respFormat(null, "Item add failed"));
     }
   };
-  updateUser = async (req, resp) => {
+  update = async (req, resp) => {
     try {
-      const users = await craftServices.userUpdate(req.body);
-      if (users) {
+      const product = await craftServices.userUpdate(req.body);
+      if (product) {
         resp.status(200);
-        resp.send(respFormat(users, "user updated :)", true));
+        resp.send(respFormat(product, "user updated :)", true));
       } else {
         resp.status(202);
-        resp.send(respFormat(users, "user update failed"));
+        resp.send(respFormat(product, "user update failed"));
       }
     } catch (error) {
       resp.status(202);
@@ -70,19 +70,35 @@ class CraftController {
     }
   };
 
-  removeUser = async (req, resp) => {
+  updateAll = async (req, resp) => {
     try {
-      const users = await craftServices.deleteOne(req.body);
-      if (users) {
+      const updates = await craftServices.updateAll();
+      if (updates) {
         resp.status(200);
-        resp.send(respFormat(users, "user Deleted", true));
+        resp.send(respFormat(updates, "All updated :)", true));
       } else {
         resp.status(202);
-        resp.send(respFormat(users, "user Deleted failed"));
+        resp.send(respFormat(product, "All update failed"));
       }
     } catch (error) {
       resp.status(202);
-      resp.send(respFormat(null, "user Deleted failed"));
+      resp.send(respFormat(null, "All update failed"));
+    }
+  };
+
+  remove = async (req, resp) => {
+    try {
+      const product = await craftServices.deleteOne(req.body);
+      if (product) {
+        resp.status(200);
+        resp.send(respFormat(product, "product Deleted", true));
+      } else {
+        resp.status(202);
+        resp.send(respFormat(product, "product Deleted failed"));
+      }
+    } catch (error) {
+      resp.status(202);
+      resp.send(respFormat(null, "product Deleted failed"));
     }
   };
 }

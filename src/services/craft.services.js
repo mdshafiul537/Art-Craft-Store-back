@@ -1,24 +1,13 @@
-import { dbActionQuery, dbConnectionClient } from "../db/connection.js";
+import dbConnectionClient, { dbActionQuery } from "../db/connection.js";
 
 class CraftServices {
-  collection = null;
-  isInitialize = false;
-
-  initProductCollection = () => {
-    const database = dbConnectionClient.db("art_craft");
-
-    this.collection = database.collection("product");
-    this.isInitialize = true;
-  };
-
   getAll = async () => {
     let respData = [];
     try {
-      if (!this.isInitialize) {
-        this.initProductCollection();
-      }
-
-      const cursor = this.collection.find();
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
+      const cursor = collection.find();
 
       respData = await cursor.toArray();
     } catch (error) {
@@ -32,15 +21,15 @@ class CraftServices {
   getOne = async (id) => {
     let resData = null;
     try {
-      if (!this.isInitialize) {
-        this.initProductCollection();
-      }
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
 
       const options = {
         projection: { _id: id },
       };
 
-      const resData = await this.collection.findOne({}, options);
+      const resData = await collection.findOne({}, options);
     } catch (error) {
       console.log("Get Product ", error);
     } finally {
@@ -51,14 +40,19 @@ class CraftServices {
 
   addOne = async (item) => {
     let addResult = null;
-    console.log("Product Service Add Action ...");
 
     try {
-      if (!this.isInitialize) {
-        this.initProductCollection();
-      }
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
 
-      addResult = await this.collection.insertOne(item);
+      const { customization, stockStatus, rating, price } = item;
+      item.customization = Boolean(customization);
+      item.stockStatus = Boolean(stockStatus);
+      item.rating = Number(rating);
+      item.price = Number(price);
+
+      addResult = await collection.insertOne(item);
     } catch (error) {
       console.log("Add Product ", error);
     } finally {
@@ -66,12 +60,12 @@ class CraftServices {
     }
   };
 
-  userUpdate = async (item) => {
+  update = async (item) => {
     let result = null;
     try {
-      if (!this.isInitialize) {
-        this.initProductCollection();
-      }
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
 
       const filter = { _id: item.id };
 
@@ -82,9 +76,32 @@ class CraftServices {
         $set: { name, email, profileURL, create },
       };
       // Update the first document that matches the filter
-      result = await this.collection.updateOne(filter, updateDoc, options);
+      result = await collection.updateOne(filter, updateDoc, options);
     } finally {
       // Close the connection after the operation completes
+      await dbConnectionClient.close();
+      return result;
+    }
+  };
+
+  updateAll = async () => {
+    let result = null;
+    try {
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
+
+      result = await collection.updateMany({}, [
+        {
+          $set: {
+            stockStatus: { $toBool: "$stockStatus" },
+            customization: { $toBool: "$customization" },
+          },
+        },
+      ]);
+    } catch (error) {
+      console.log("Update Error, ", error);
+    } finally {
       await dbConnectionClient.close();
       return result;
     }
