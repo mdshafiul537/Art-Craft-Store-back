@@ -19,20 +19,21 @@ class App {
   }
 
   initializeMiddlewares = () => {
-    const corsConfig = {
-      origin: ["**", "https://ayat-art-craft.web.app", "https://ayat-art-craft.firebaseapp.com/**",],
-      credentials: true,
-      "Access-Control-Allow-Origin": "*",
-      methods: ["GET", "POST", "PUT", "DELETE"],
-    };
-
-    this.expressApp.options("", cors(corsConfig));
+    this.expressApp.use(
+      cors({
+        origin: [
+          "**",
+          "https://ayat-art-craft.web.app",
+          "https://ayat-art-craft.firebaseapp.com/**",
+        ],
+        credential: true,
+      })
+    );
     this.expressApp.use(express.urlencoded({ extended: false }));
     this.expressApp.use(express.json({ limit: "20mb" }));
   };
 
   connectToDatabase = async () => {
-
     const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.rdwf6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
   };
 
