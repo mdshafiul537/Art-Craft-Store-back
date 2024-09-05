@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import dbConnectionClient, { dbActionQuery } from "../db/connection.js";
 
 class UserServices {
@@ -38,16 +39,14 @@ class UserServices {
 
   addOne = async (user) => {
     let userResult = null;
-    console.log("User Service Add Action ...");
 
     try {
-      dbActionQuery((db) => {
-        const collection = db.collection("user");
-        user.create = new Date();
-        userResult = collection.insertOne(user);
-      });
+      const collection = dbConnectionClient.db("art_craft").collection("user");
+
+      user.create = new Date();
+      userResult = await collection.insertOne(user);
     } catch (error) {
-      console.log("addOne Error, ", error);
+      console.log("User AddOne Error, ", error);
     } finally {
       return userResult;
     }
@@ -58,7 +57,7 @@ class UserServices {
       const database = dbConnectionClient.db("art_craft");
       const collection = database.collection("user");
 
-      const filter = { _id: uUser.id };
+      const filter = { _id: new ObjectId(uUser.id) };
 
       const options = { upsert: true };
 

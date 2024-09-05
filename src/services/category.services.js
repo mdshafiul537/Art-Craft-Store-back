@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import dbConnectionClient, { dbActionQuery } from "../db/connection.js";
 
 class CategoryServices {
@@ -56,20 +57,19 @@ class CategoryServices {
     }
   };
 
-  update = async (item) => {
+  update = async (category) => {
     let result = null;
     try {
       const collection = dbConnectionClient
         .db("art_craft")
         .collection("category");
 
-      const filter = { _id: item.id };
+      const filter = { _id: new ObjectId(category.id) };
 
       const options = { upsert: true };
 
-      const { name, email, profileURL } = uUser;
       const updateDoc = {
-        $set: { name, email, profileURL, create },
+        $set: category,
       };
       // Update the first document that matches the filter
       result = await collection.updateOne(filter, updateDoc, options);

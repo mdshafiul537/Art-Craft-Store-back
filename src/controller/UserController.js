@@ -40,7 +40,6 @@ class UserController {
 
   addUser = async (req, resp) => {
     try {
-      console.log("User Body ", req.body);
       const user = await userServices.addOne(req.body);
       if (user) {
         resp.status(200);

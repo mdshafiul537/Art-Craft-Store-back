@@ -45,8 +45,6 @@ class CraftController {
   };
   getAllByQuery = async (req, resp) => {
     try {
-      console.log("Request Query ", req.query);
-
       const products = await craftServices.getByQuery(req.query);
       if (products) {
         resp.status(200);

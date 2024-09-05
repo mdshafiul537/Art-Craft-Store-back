@@ -6,6 +6,10 @@ class CraftServices {
   getByQuery = async (query) => {
     let respData = [];
     try {
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
+
       let filter = {};
 
       if (query.stock && query.customizable) {
@@ -17,10 +21,6 @@ class CraftServices {
       } else if (!esIsEmpty(query.rating)) {
         filter = { rating: { $gte: query.rating } };
       }
-
-      const collection = dbConnectionClient
-        .db("art_craft")
-        .collection("product");
 
       const cursor = collection.find(filter).limit(12);
 
@@ -124,7 +124,7 @@ class CraftServices {
 
   update = async (item) => {
     let result = null;
-    console.log("Item Update ", item);
+
     try {
       const collection = dbConnectionClient
         .db("art_craft")
@@ -135,13 +135,12 @@ class CraftServices {
       const options = { upsert: true };
 
       const updateDoc = {
-        $set: { image: item.image },
+        $set: item,
       };
 
       // Update the first document that matches the filter
       result = await collection.updateOne(filter, updateDoc, options);
     } finally {
-      // Close the connection after the operation completes
       return result;
     }
   };
@@ -153,13 +152,16 @@ class CraftServices {
         .db("art_craft")
         .collection("product");
 
-      result = await collection.updateMany({ userEmail: "md.shafiul.islam@gmail.com" }, [
-        {
-          $set: {
-            userEmail: "shafiul2014bd@gmail.com",
+      result = await collection.updateMany(
+        { userEmail: "md.shafiul.islam@gmail.com" },
+        [
+          {
+            $set: {
+              userEmail: "shafiul2014bd@gmail.com",
+            },
           },
-        },
-      ]);
+        ]
+      );
     } catch (error) {
       console.log("Update Error, ", error);
     } finally {
