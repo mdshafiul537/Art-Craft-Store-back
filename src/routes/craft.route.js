@@ -6,6 +6,7 @@ const craftRoute = express.Router();
 craftRoute.get("/", craftController.getAll);
 craftRoute.get("/query", craftController.getAllByQuery);
 craftRoute.get("/categories/:category", craftController.getAllByCategory);
+craftRoute.get("/users/:user", craftController.getAllByUser);
 
 craftRoute.post("/", craftController.add);
 craftRoute.put("/", craftController.update);

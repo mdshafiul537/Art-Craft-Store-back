@@ -47,6 +47,24 @@ class CraftServices {
       return respData;
     }
   };
+
+  getByUser = async (user) => {
+    let respData = [];
+    try {
+      const collection = dbConnectionClient
+        .db("art_craft")
+        .collection("product");
+      const cursor = collection.find({
+        $or: [{ userEmail: user }, { userName: user }],
+      });
+
+      respData = await cursor.toArray();
+    } catch (error) {
+      console.log("Get All Product ", error);
+    } finally {
+      return respData;
+    }
+  };
   getAll = async () => {
     let respData = [];
     try {
@@ -135,10 +153,10 @@ class CraftServices {
         .db("art_craft")
         .collection("product");
 
-      result = await collection.updateMany({ category: "macrame" }, [
+      result = await collection.updateMany({ userEmail: "md.shafiul.islam@gmail.com" }, [
         {
           $set: {
-            category: "Macrame",
+            userEmail: "shafiul2014bd@gmail.com",
           },
         },
       ]);

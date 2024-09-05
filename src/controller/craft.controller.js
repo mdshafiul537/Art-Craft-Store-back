@@ -25,6 +25,24 @@ class CraftController {
     }
   };
 
+  getAllByUser = async (req, resp) => {
+    try {
+      const { user } = req.params;
+      const products = await craftServices.getByUser(user);
+      if (products) {
+        resp.status(200);
+        resp.send(
+          respFormat(products, `${products.length} Products found`, true)
+        );
+      } else {
+        resp.status(202);
+        resp.send(respFormat(products, "Products not found"));
+      }
+    } catch (error) {
+      resp.status(202);
+      resp.send(respFormat(null, "Products not found"));
+    }
+  };
   getAllByQuery = async (req, resp) => {
     try {
       console.log("Request Query ", req.query);
