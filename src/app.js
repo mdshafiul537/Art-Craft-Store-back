@@ -10,7 +10,6 @@ class App {
   expressApp = null;
   constructor() {
     this.expressApp = express();
-    //mongodb+srv://md_shafiul:ukmoVJzlpbCUnoqE@cluster0.rdwf6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
     this.connectToDatabase();
 
