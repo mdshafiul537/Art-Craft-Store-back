@@ -1,7 +1,8 @@
 import express from "express";
-import cors from "cors";
+
 import routes from "./routes/index.js";
 import "dotenv/config";
+import cors from "cors";
 
 class App {
   port = process.env.PORT || 3050;
@@ -19,18 +20,40 @@ class App {
   }
 
   initializeMiddlewares = () => {
+    // this.expressApp.use(
+    //   cors({
+    //     origin: [
+    //       "*",
+    //       "https://ayat-art-craft.web.app",
+    //       "http://localhost:5173",
+    //     ],
+    //   })
+    // );
+    const allowedOrigins = new Set([
+      "https://ayat-art-craft.web.app",
+      "http://localhost:5173",
+    ]);
     this.expressApp.use(
       cors({
-        origin: [
-          "**",
-          "https://ayat-art-craft.web.app",
-          "https://ayat-art-craft.firebaseapp.com/**",
-        ],
-        credential: true,
+        origin: (origin, callback) => {
+          if (allowedOrigins.has(origin ?? "") || !origin) {
+            callback(null, true);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
+        credentials: true,
+        optionsSuccessStatus: 200,
       })
     );
+
+    this.expressApp.use((req, resp, next) => {
+      // console.log("initializeMiddlewares, ");
+      next();
+    });
     this.expressApp.use(express.urlencoded({ extended: false }));
     this.expressApp.use(express.json({ limit: "20mb" }));
+    this.expressApp.use(express.static("dist"));
   };
 
   connectToDatabase = async () => {
