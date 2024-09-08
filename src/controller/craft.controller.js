@@ -27,7 +27,7 @@ class CraftController {
 
   getAllByUser = async (req, resp) => {
     try {
-      const { user } = req.params;
+      const { user } = req.query;
       const products = await craftServices.getByUser(user);
       if (products) {
         resp.status(200);

@@ -49,6 +49,7 @@ class CraftServices {
   };
 
   getByUser = async (user) => {
+    console.log("Get User Crafts ", user);
     let respData = [];
     try {
       const collection = dbConnectionClient
@@ -60,7 +61,7 @@ class CraftServices {
 
       respData = await cursor.toArray();
     } catch (error) {
-      // console.log("Get All Product ", error);
+      console.log("Get All Product ", error);
     } finally {
       return respData;
     }
