@@ -32,6 +32,7 @@ class App {
     const allowedOrigins = new Set([
       "https://ayat-art-craft.web.app",
       "http://localhost:5173",
+      "http://localhost:3050/",
     ]);
     this.expressApp.use(
       cors({

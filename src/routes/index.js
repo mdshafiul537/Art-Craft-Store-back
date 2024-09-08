@@ -12,7 +12,7 @@ export default (app) => {
   app.use(categoryUrl, categoryRoute);
 
   app.use("/health-check", (req, resp) => {
-    console.log("It Work DB USER ", process.env.DB_USER);
+    // console.log("It Work DB USER ", process.env.DB_USER);
     resp.send({ status: "ok" });
   });
 

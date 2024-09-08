@@ -10,7 +10,7 @@ craftRoute.get("/users/:user", craftController.getAllByUser);
 
 craftRoute.post("/", craftController.add);
 craftRoute.put("/", craftController.update);
-craftRoute.delete("/", craftController.remove);
+craftRoute.delete("/:id", craftController.remove);
 craftRoute.put("/all", craftController.updateAll);
 craftRoute.get("/:id", craftController.getOne);
 

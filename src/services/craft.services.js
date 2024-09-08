@@ -26,7 +26,7 @@ class CraftServices {
 
       respData = await cursor.toArray();
     } catch (error) {
-      console.log("Get Query All Product ", error);
+      // console.log("Get Query All Product ", error);
     } finally {
       return respData;
     }
@@ -42,7 +42,7 @@ class CraftServices {
 
       respData = await cursor.toArray();
     } catch (error) {
-      console.log("Get All Product ", error);
+      // console.log("Get All Product ", error);
     } finally {
       return respData;
     }
@@ -60,7 +60,7 @@ class CraftServices {
 
       respData = await cursor.toArray();
     } catch (error) {
-      console.log("Get All Product ", error);
+      // console.log("Get All Product ", error);
     } finally {
       return respData;
     }
@@ -75,7 +75,7 @@ class CraftServices {
 
       respData = await cursor.toArray();
     } catch (error) {
-      console.log("Get All Product ", error);
+      // console.log("Get All Product ", error);
     } finally {
       return respData;
     }
@@ -94,7 +94,7 @@ class CraftServices {
 
       resData = await collection.findOne(filter);
     } catch (error) {
-      console.log("Get One Product Error, ", error);
+      // console.log("Get One Product Error, ", error);
     } finally {
       return resData;
     }
@@ -116,7 +116,7 @@ class CraftServices {
 
       addResult = await collection.insertOne(item);
     } catch (error) {
-      console.log("Add Product ", error);
+      // console.log("Add Product ", error);
     } finally {
       return addResult;
     }
@@ -163,13 +163,27 @@ class CraftServices {
         ]
       );
     } catch (error) {
-      console.log("Update Error, ", error);
+      // console.log("Update Error, ", error);
     } finally {
       return result;
     }
   };
 
-  deleteOne = async () => {};
+  deleteOne = async (id) => {
+    // console.log("Delete Item Id ", id);
+    let resp = null;
+    try {
+      const database = dbConnectionClient.db("art_craft");
+      const artCraft = database.collection("product");
+
+      const query = { _id: new ObjectId(id) };
+      resp = await artCraft.deleteOne(query);
+    } catch (error) {
+      // console.log("Item Delete Error ", error);
+    } finally {
+      return resp;
+    }
+  };
 }
 
 const craftServices = new CraftServices();

@@ -32,7 +32,7 @@ class UserController {
         resp.send(respFormat(user, "user not found by id"));
       }
     } catch (error) {
-      console.log("user find by id Error ", error);
+      // console.log("user find by id Error ", error);
       resp.status(202);
       resp.send(respFormat(null, "user not found  by id"));
     }

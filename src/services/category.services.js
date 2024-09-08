@@ -13,7 +13,7 @@ class CategoryServices {
 
       respData = await cursor.toArray();
     } catch (error) {
-      console.log("Get All Category ", error);
+      // console.log("Get All Category ", error);
     } finally {
       // await dbConnectionClient.close();
       return respData;
@@ -22,7 +22,7 @@ class CategoryServices {
 
   getOne = async (id) => {
     let resData = null;
-    console.log("Category ID ", id);
+    // console.log("Category ID ", id);
     try {
       const collection = dbConnectionClient
         .db("art_craft")
@@ -33,7 +33,7 @@ class CategoryServices {
 
       const resData = await collection.findOne({}, options);
     } catch (error) {
-      console.log("Get Product ", error);
+      // console.log("Get Product ", error);
     } finally {
       return resData;
       // await dbConnectionClient.close();
@@ -42,7 +42,7 @@ class CategoryServices {
 
   addOne = async (item) => {
     let addResult = null;
-    console.log("Category Service Add Action ...");
+    // console.log("Category Service Add Action ...");
 
     try {
       const collection = dbConnectionClient
@@ -51,7 +51,7 @@ class CategoryServices {
 
       addResult = await collection.insertOne(item);
     } catch (error) {
-      console.log("Add Category ", error);
+      // console.log("Add Category ", error);
     } finally {
       return addResult;
     }

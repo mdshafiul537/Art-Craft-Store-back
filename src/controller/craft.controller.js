@@ -49,15 +49,19 @@ class CraftController {
       if (products) {
         resp.status(200);
         resp.send(
-          respFormat(products, `${products.length} Products found`, true)
+          respFormat(
+            products,
+            `${products.length} Products found By User`,
+            true
+          )
         );
       } else {
         resp.status(202);
-        resp.send(respFormat(products, "Products not found"));
+        resp.send(respFormat(products, "Products not found By User"));
       }
     } catch (error) {
       resp.status(202);
-      resp.send(respFormat(null, "Products not found"));
+      resp.send(respFormat(null, "Products not found By User"));
     }
   };
   getAll = async (req, resp) => {
@@ -84,7 +88,7 @@ class CraftController {
       const product = await craftServices.getOne(id);
       if (product) {
         const catProducts = await craftServices.getByCat(product.category);
-        console.log("Related Cat Items ", catProducts);
+        // console.log("Related Cat Items ", catProducts);
         resp.status(200);
         resp.send(
           respFormat(
@@ -98,7 +102,7 @@ class CraftController {
         resp.send(respFormat(product, "Art & Craft not found by id"));
       }
     } catch (error) {
-      console.log("Art & Craft find by id Error ", error);
+      // console.log("Art & Craft find by id Error ", error);
       resp.status(202);
       resp.send(respFormat(null, "Art & Craft not found  by id"));
     }
@@ -106,7 +110,7 @@ class CraftController {
 
   add = async (req, resp) => {
     try {
-      console.log("Item Body ", req.body);
+      // console.log("Item Body ", req.body);
       const product = await craftServices.addOne(req.body);
       if (product) {
         resp.status(200);
@@ -154,7 +158,7 @@ class CraftController {
 
   remove = async (req, resp) => {
     try {
-      const product = await craftServices.deleteOne(req.body);
+      const product = await craftServices.deleteOne(req.params?.id);
       if (product) {
         resp.status(200);
         resp.send(respFormat(product, "product Deleted", true));

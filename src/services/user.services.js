@@ -18,7 +18,7 @@ class UserServices {
   };
 
   getOne = async (id) => {
-    console.log("User Finding using id ", id);
+    // console.log("User Finding using id ", id);
     let respUser = null;
     try {
       // Get the database and collection on which to run the operation
@@ -31,7 +31,7 @@ class UserServices {
 
       const respUser = await collection.findOne({}, options);
     } catch (error) {
-      console.log("User By ID Error, ", error);
+      // console.log("User By ID Error, ", error);
     } finally {
       return respUser;
     }
@@ -46,7 +46,7 @@ class UserServices {
       user.create = new Date();
       userResult = await collection.insertOne(user);
     } catch (error) {
-      console.log("User AddOne Error, ", error);
+      // console.log("User AddOne Error, ", error);
     } finally {
       return userResult;
     }

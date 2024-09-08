@@ -12,7 +12,7 @@ const dbActionQuery = async (actionQuery) => {
     const database = dbConnectionClient.db("art_craft");
     actionQuery(database);
   } catch (error) {
-    console.log("DB Action Query Error ", error);
+    // console.log("DB Action Query Error ", error);
   } finally {
     await dbConnectionClient.close();
   }

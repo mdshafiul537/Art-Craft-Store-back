@@ -32,7 +32,7 @@ class CategoryController {
         resp.send(respFormat(category, "Category not found by id"));
       }
     } catch (error) {
-      console.log("Category find by id Error ", error);
+      // console.log("Category find by id Error ", error);
       resp.status(202);
       resp.send(respFormat(null, "Category not found  by id"));
     }
@@ -40,7 +40,7 @@ class CategoryController {
 
   add = async (req, resp) => {
     try {
-      console.log("User Body ", req.body);
+      // console.log("User Body ", req.body);
       const category = await categoryServices.addOne(req.body);
       if (category) {
         resp.status(200);
